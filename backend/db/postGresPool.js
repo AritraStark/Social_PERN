@@ -1,7 +1,9 @@
-import { Pool } from 'pg'
+import pg from 'pg'
 
-const pool = new Pool({
+const { Pool } = pg
 
-})
+const pool = new Pool()
 
-export default query = (text, params) => pool.query(text, params)
+const query = (text, params) => pool.query(text, params)
+
+export default query
