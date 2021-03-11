@@ -8,24 +8,26 @@ CREATE TABLE usersdb (
     PRIMARY KEY(id)
 );
 CREATE TABLE postsdb (
-    id INT NOT NULL UNIQUE AUTO_INCREMENT,
+    id BIGSERIAL UNIQUE,
     user_id INT NOT NULL,
     title VARCHAR(100) NOT NULL,
     body VARCHAR(255) NOT NULL,
+    url VARCHAR(255),
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES userdb(id)
+    FOREIGN KEY (user_id) REFERENCES usersdb(id)
 );
 CREATE TABLE commentsdb(
-    id INT NOT NULL UNIQUE AUTO_INCREMENT,
+    id BIGSERIAL UNIQUE,
     post_id INT NOT NULL,
-    user__id INT NOT NULL,
+    user_id INT NOT NULL,
+    user_name VARCHAR NOT NULL,
     body VARCHAR(255) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES userdb(id),
-    FOREIGN KEY (post_id) REFERENCES postdb(id)
+    FOREIGN KEY (user_id) REFERENCES usersdb(id),
+    FOREIGN KEY (post_id) REFERENCES postsdb(id)
 );
 CREATE TABLE followersdb(
-    id INT NOT NULL UNIQUE AUTO_INCREMENT,
-    user_id_main INT NOT NULL,
-    user_id_sub INT NOT NULL,
-)
+    id BIGSERIAL UNIQUE,
+    user_id_primary INT NOT NULL,
+    user_id_secondary INT NOT NULL
+);
