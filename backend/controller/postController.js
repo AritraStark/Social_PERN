@@ -71,3 +71,17 @@ export const getUserPosts = asyncHandler(async (req, res) => {
         throw new Error(error)
     }
 })
+
+export const getFollowerPosts = asyncHandler(async (req, res) => {
+    const { id } = req.user
+
+    const { rows } = await query('SELECT * FROM postsdb INNER JOIN followersdb ON postsdb.id = followersdb.user_id_secondary WHERE followersdb.user_id_primary = id')
+
+    try {
+        res.status(200)
+            .json(rows)
+    } catch (error) {
+        res.status(400)
+        throw new Error(error)
+    }
+})

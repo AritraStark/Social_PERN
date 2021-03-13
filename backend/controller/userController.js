@@ -109,3 +109,19 @@ export const getUsers = asyncHandler(async (req, res) => {
         throw new Error(error)
     }
 })
+
+//@route GET /api/users/;id
+//@desc Get user details
+//@access Public
+export const getUser = asyncHandler(async (req, res) => {
+    const id = req.params.id
+    try {
+        const { rows } = await query('SELECT * from usersdb WHERE id = $1', [id])
+        console.log(rows)
+        res.status(200)
+            .json(rows)
+    } catch (error) {
+        res.status(400)
+        throw new Error(error)
+    }
+})

@@ -4,6 +4,7 @@ import userRoutes from './routes/userRoutes.js'
 import postRoutes from './routes/postRoutes.js'
 import followerRoutes from './routes/followerRoutes.js'
 import commentRoutes from './routes/commentsRoute.js'
+import likesRoutes from './routes/likesRoutes.js'
 
 const app = express()
 dotenv.config()
@@ -14,6 +15,7 @@ app.use('/api/users', userRoutes)
 app.use('/api/posts', postRoutes)
 app.use('/api/followers', followerRoutes)
 app.use('/api/comments', commentRoutes)
+app.use('/api/likes', likesRoutes)
 
 const PORT = process.env.PORT || 5000
 

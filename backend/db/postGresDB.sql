@@ -31,3 +31,10 @@ CREATE TABLE followersdb(
     user_id_primary INT NOT NULL,
     user_id_secondary INT NOT NULL
 );
+CREATE TABLE likesdb(
+    id BIGSERIAL UNIQUE,
+    user_id INT NOT NULL,
+    post_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES usersdb(id),
+    FOREIGN KEY (post_id) REFERENCES postsdb(id)
+)
