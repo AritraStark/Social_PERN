@@ -4,7 +4,7 @@ import { insertLike, checkLike, getLikesCount, deleteLike } from '../controller/
 
 const router = express.Router()
 
-router.use('/:id').post(authM, insertLike).get(authM, getLikesCount).delete(authM, deleteLike)
+router.route('/:id').post(authM, insertLike).get(authM, getLikesCount).delete(authM, deleteLike)
 router.get('/post/:id', authM, checkLike)
 
 export default router

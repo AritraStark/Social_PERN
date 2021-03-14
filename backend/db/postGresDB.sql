@@ -37,4 +37,4 @@ CREATE TABLE likesdb(
     post_id INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES usersdb(id),
     FOREIGN KEY (post_id) REFERENCES postsdb(id)
-)
+);

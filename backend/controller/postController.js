@@ -72,10 +72,13 @@ export const getUserPosts = asyncHandler(async (req, res) => {
     }
 })
 
+//@route GET /api/posts/follow
+//@desc Get follower posts
+//@access Private
 export const getFollowerPosts = asyncHandler(async (req, res) => {
     const { id } = req.user
 
-    const { rows } = await query('SELECT * FROM postsdb INNER JOIN followersdb ON postsdb.id = followersdb.user_id_secondary WHERE followersdb.user_id_primary = id')
+    const { rows } = await query('SELECT * FROM postsdb INNER JOIN followersdb ON postsdb.user_id = followersdb.user_id_secondary WHERE followersdb.user_id_primary = $1', [id])
 
     try {
         res.status(200)

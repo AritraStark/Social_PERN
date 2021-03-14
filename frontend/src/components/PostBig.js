@@ -11,12 +11,15 @@ import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
-import CommentIcon from '@material-ui/icons/Comment';import MoreVertIcon from '@material-ui/icons/MoreVert';
+import CommentIcon from '@material-ui/icons/Comment';
 import Grid from '@material-ui/core/Grid';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 345,
+    maxWidth: 550,
+    minWidth: 350,
+    minHeight:380,
   },
   media: {
     height: 0,
@@ -39,20 +42,21 @@ const useStyles = makeStyles((theme) => ({
 
 export const PostBig = () => {
   const classes = useStyles();
+  const history = useHistory();
+
+  function handlePostRoute(id){
+    history.push(`/post/${id}`)
+  }
 
   return (
-    <Card className={classes.root}>
+    <Card variant="outlined" className={classes.root}>
       <CardHeader
         avatar={
           <Avatar aria-label="recipe" className={classes.avatar}>
             R
           </Avatar>
         }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
+        
         title="Shrimp and Chorizo Paella"
         subheader="September 14, 2016"
       />
@@ -63,24 +67,24 @@ export const PostBig = () => {
       />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
-          This impressive paella is a perfect party dish and a fun meal to cook together with your
-          guests. Add 1 cup of frozen peas along with the mussels, if you like.
+          
+          
         </Typography>
       </CardContent>
       <CardActions >
         <Grid container justify="space-around" spacing="2">
           <Grid item >
-            <IconButton aria-label="add to favorites">
+            <IconButton aria-label="add to favorites" onClick={handlePostRoute}>
               <FavoriteIcon />
             </IconButton>
           </Grid>
           <Grid item >
-            <IconButton aria-label="share">
+            <IconButton aria-label="share" onClick={handlePostRoute}>
               <CommentIcon />
             </IconButton>
           </Grid>
           <Grid item >
-            <IconButton aria-label="share">
+            <IconButton aria-label="share" onClick={handlePostRoute}>
               <ShareIcon />
             </IconButton>
           </Grid>
