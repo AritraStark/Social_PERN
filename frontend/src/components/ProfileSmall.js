@@ -2,6 +2,7 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import { Avatar } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,10 +22,13 @@ export const ProfileSmall = () => {
         <div>
             <Paper variant="outlined" square >
                 <div>
-                    
-                    <h3>Name XYZ</h3>
+                    <Avatar/>
+                    <div>
+                      <h3>Name XYZ</h3>
+                      <p> Description </p>
+                    </div>
                 </div>
-                <Button variant="outlined">Follow</Button>
+                <Button variant="outlined">View</Button>
             </Paper>
         </div>
     )

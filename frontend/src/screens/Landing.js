@@ -7,16 +7,22 @@ import Container from '@material-ui/core/Container';
 import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    '& > *': {
-      margin: theme.spacing(1),
-      width: theme.spacing(16),
-      height: theme.spacing(16),
-    },
-    alignItems:'space-around',
-    justifyContent: 'space-around'
+  logo:{
+    display:'flex',
+    padding:'6rem 0',
+    flexDirection:'column',
+    justifyContent:'space-around',
+    alignItems:'center'
   },
+  image:{
+    maxHeight:250,
+    maxWidth:250
+  },
+  buttons:{
+    display:'flex',
+    justifyContent:'space-around',
+    padding: '0 6rem'
+  }
 }));
 
 export default function Landing() {
@@ -25,21 +31,21 @@ export default function Landing() {
 
   return (
     <div className={classes.root}>
-        <Container maxWidth="xl">
-            <CardMedia
-            className={classes.media}
-            image="./public/logo192.png"
-            title="Paella dish"
-            />
-            <Typography variant="h1" component="h2">
+        <Container maxWidth="sm">
+          <div className={classes.logo}>
+            <img src="/logo192.png" className={classes.image}/>
+            <Typography variant="h2" component="h3">
                 Social Networking App
             </Typography>
+          </div>
+          <div className={classes.buttons}>
             <Button variant="outlined" color="primary" onClick={()=>{history.push('/login')}}>
                 Login
             </Button>
             <Button variant="outlined" color="primary" onClick={()=>{history.push('/signup')}}>
                 Signup
             </Button>
+          </div>
         </Container>
     </div>
 )};
