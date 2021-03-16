@@ -34,11 +34,13 @@ import {
 import {
     loginReducer,
     signupReducer,
+    getUserDetailsReducer
 } from './reducers/userReducers'
 
 const reducers = combineReducers({
     login: loginReducer,
     signup: signupReducer,
+    userDetailsGet: getUserDetailsReducer,
     postCreate: createPostReducer,
     postGet: getPostReducer,
     followerPostGet: getFollowerPostsReducer,
@@ -66,9 +68,9 @@ const authStateFromStorage = userDetailsFromStorage.token&&true
 
 const initialState = {
     login:{
+        success: authStateFromStorage,
         userDetails: userDetailsFromStorage
     },
-    authState:authStateFromStorage
 }
 
 const store = createStore(

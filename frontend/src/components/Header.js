@@ -9,7 +9,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { useHistory } from 'react-router';
 import Avatar from '@material-ui/core/Avatar';
 import {Link} from 'react-router-dom'
-
+import {useDispatch,useSelector} from 'react-redux'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme) => ({
 export const Header = () => {
   const classes = useStyles();
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  const {userDetails} = useSelector(state=>state.login)
   
   return (
     <div className={classes.root}>
@@ -46,7 +49,7 @@ export const Header = () => {
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 color="inherit"
-                onClick={()=>history.push('/profile')}
+                onClick={()=>history.push(`/user/${userDetails.user.id}`)}
               >
                 <AccountCircle />
               </IconButton>

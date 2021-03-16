@@ -13,6 +13,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 const useStyles = makeStyles({
   root: {
     maxWidth: 345,
+    minWidth: 245,
+    margin:'1rem 0'
   },
   media: {
     height: 140,
@@ -31,7 +33,7 @@ const useStyles = makeStyles({
   }
 });
 
-export default function PostSmall() {
+export default function PostSmall({post}) {
   const classes = useStyles();
 
   return (
@@ -39,16 +41,15 @@ export default function PostSmall() {
       <CardActionArea>
         <CardMedia
           className={classes.media}
-          image="/static/images/cards/contemplative-reptile.jpg"
+          image={post.url}
           title="Contemplative Reptile"
         />
         <CardContent className={classes.text}>
           <Typography gutterBottom variant="h5" component="h2">
-            Lizard
+            {post.title}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-            across all continents except Antarctica
+            {post.body}
           </Typography>
         </CardContent>
       </CardActionArea>

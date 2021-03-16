@@ -123,7 +123,7 @@ export const deletePostReducer = (state = {}, action) => {
     }
 }
 
-export const getUserPostsReducer = ( state={} , action) =>{
+export const getUserPostsReducer = ( state={posts:[]} , action) =>{
     switch (action.type) {
         case GET_USER_POSTS_INIT:
             return {

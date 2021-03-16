@@ -117,9 +117,8 @@ export const getUser = asyncHandler(async (req, res) => {
     const id = req.params.id
     try {
         const { rows } = await query('SELECT * from usersdb WHERE id = $1', [id])
-        console.log(rows)
         res.status(200)
-            .json(rows)
+            .json(rows[0])
     } catch (error) {
         res.status(400)
         throw new Error(error)

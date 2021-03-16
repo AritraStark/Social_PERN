@@ -5,7 +5,10 @@ import {
     LOGOUT,
     SIGNUP_INIT,
     SIGNUP_SUCCESS,
-    SIGNUP_FAIL
+    SIGNUP_FAIL,
+    GET_USER_DETAILS_INIT,
+    GET_USER_DETAILS_SUCCESS,
+    GET_USER_DETAILS_FAIL
 } from '../constants/userConstants.js'
 
 export const loginReducer = (state = {}, action) => {
@@ -51,6 +54,30 @@ export const signupReducer = (state = {}, action) => {
                 success: true
             }
         case SIGNUP_FAIL:
+            return{
+                loading: false,
+                error: action.payload,
+                success: false
+            }
+        default:
+            return state
+    }
+}
+
+export const getUserDetailsReducer = (state = {userDetails:{}}, action) => {
+    switch(action.type){
+        case GET_USER_DETAILS_INIT:
+            return {
+                loading: true,
+                success:false
+            }
+        case GET_USER_DETAILS_SUCCESS:
+            return{
+                loading: false,
+                userDetails: action.payload,
+                success: true
+            }
+        case GET_USER_DETAILS_FAIL:
             return{
                 loading: false,
                 error: action.payload,

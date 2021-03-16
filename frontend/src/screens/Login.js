@@ -42,15 +42,17 @@ function Alert(props) {
 
 export const LoginComponent = () => {
     const history = useHistory()
+    const dispatch = useDispatch()
+
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
     const [open, setOpen] = useState(false);
 
-    const dispatch = useDispatch()
+    const {success,userDetails,token} = useSelector(state=>state.login)
     
     function handleLoginClick(e) {
         e.preventDefault()
-        
+        dispatch(login(email,password))
     }
 
     const handleAlertClose = (event, reason) => {
@@ -61,8 +63,9 @@ export const LoginComponent = () => {
     };
 
     useEffect(()=>{
-
-    },[])
+        if(success)
+        history.push(`/user/${userDetails.user.id}`)
+    },[success,history,userDetails])
 
     const classes = useStyles()
     return (

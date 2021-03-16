@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import Container from '@material-ui/core/Container';
@@ -11,6 +11,11 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { Avatar } from '@material-ui/core';
+import {useDispatch,useSelector} from 'react-redux'
+import { getUserPosts } from '../actions/postActions';
+import {Loader} from '../components/Loader';
+import PostSmall from '../components/PostSmall'
+import { getUserDetails } from '../actions/userActions';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -63,13 +68,36 @@ const useStyles = makeStyles((theme) => ({
       width: theme.spacing(7),
       height: theme.spacing(7),
     },
+    center:{
+      display:'flex',
+      flexDirection:'column',
+      justifyContent:'space-around',
+      alignItems:'center'
+    }
 }));
   
 
-export const Profile = () => {
+export const Profile = ({match}) => {
     const classes = useStyles();
     const theme = useTheme();
+    const dispatch = useDispatch();
+
     const [value, setValue] = React.useState(0);
+    const id = match.params.id
+
+    const userPostget = useSelector(state=>state.userPostGet)
+    const {posts} = userPostget
+    const postLoading = userPostget.loading
+
+    const userDetailsget = useSelector(state=>state.userDetailsGet)
+    const {userDetails} = userDetailsget
+    const userLoading = userDetailsget.loading
+
+    useEffect(() => {
+      dispatch(getUserDetails(id))
+      dispatch(getUserPosts(id))
+      
+    }, [id,dispatch])
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -81,12 +109,16 @@ export const Profile = () => {
     return (
         <div>
             <Header/>
+              {userLoading
+              ?
+              <Loader/>
+              :
                 <Container maxWidth="md">
                     <div className={classes.head}>
                         <Avatar className={classes.large} />
                         <div >
-                        <h3>Name XYZ</h3>
-                        <p>Description</p>
+                        <h3>{userDetails.name}</h3>
+                        <p>{userDetails.description}</p>
                         </div>
                     </div>
                     <AppBar position="static" color="default">
@@ -110,7 +142,9 @@ export const Profile = () => {
                         onChangeIndex={handleChangeIndex}
                     >
                         <TabPanel value={value} index={0} dir={theme.direction}>
-                        Item One
+                          <div className={classes.center}>
+                            {postLoading?<Loader/>:posts.map((post)=><PostSmall post={post}/>)} 
+                          </div>
                         </TabPanel>
                         <TabPanel value={value} index={1} dir={theme.direction}>
                         Item Two
@@ -123,6 +157,7 @@ export const Profile = () => {
                         
                     </div>
                 </Container>
+                }
             <Footer/>
         </div>
     )
