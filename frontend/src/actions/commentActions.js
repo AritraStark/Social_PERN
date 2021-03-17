@@ -1,15 +1,20 @@
 import axios from 'axios'
 import { CREATE_COMMENT_FAIL, CREATE_COMMENT_INIT, CREATE_COMMENT_SUCCESS, DELETE_COMMENT_FAIL, DELETE_COMMENT_INIT, DELETE_COMMENT_SUCCESS, GET_POST_COMMENTS_FAIL, GET_POST_COMMENTS_INIT, GET_POST_COMMENTS_SUCCESS, UPDATE_COMMENT_FAIL, UPDATE_COMMENT_INIT, UPDATE_COMMENT_SUCCESS, DELETE_POST_COMMENTS_INIT, DELETE_POST_COMMENTS_SUCCESS, DELETE_POST_COMMENTS_FAIL } from '../constants/commentConstants'
 
-export const createComment = (post_id,body) => async(dispatch) => {
+export const createComment = (post_id,body) => async(dispatch,getState) => {
     try {
         dispatch({
             type: CREATE_COMMENT_INIT
         })
 
+        const {
+            login:{userDetails}
+        } = getState()
+
         const config = {
             headers:{
-                'Content-type':'application/json'
+                'Content-type':'application/json',
+                'x-auth': userDetails.token
             }
         }
 
@@ -51,13 +56,24 @@ export const updateComment = (id,body) => async(dispatch) => {
     }
 }
 
-export const deleteComment = (id) => async(dispatch) => {
+export const deleteComment = (id) => async(dispatch,getState) => {
     try {
         dispatch({
             type: DELETE_COMMENT_INIT
         })
 
-        const {data} = await axios.delete(`/api/comments/${id}`)
+        const {
+            login:{userDetails}
+        } = getState()
+
+        const config = {
+            headers:{
+                'Content-type':'application/json',
+                'x-auth': userDetails.token
+            }
+        }
+
+        const {data} = await axios.delete(`/api/comments/${id}`,config)
 
         dispatch({
             type: DELETE_COMMENT_SUCCESS,
@@ -73,13 +89,24 @@ export const deleteComment = (id) => async(dispatch) => {
     }
 }
 
-export const getPostComments = (id) => async(dispatch) => {
+export const getPostComments = (id) => async(dispatch,getState) => {
     try {
         dispatch({
             type: GET_POST_COMMENTS_INIT
         })
 
-        const {data} = await axios.get(`/api/comments/${id}`)
+        const {
+            login:{userDetails}
+        } = getState()
+
+        const config = {
+            headers:{
+                'Content-type':'application/json',
+                'x-auth': userDetails.token
+            }
+        }
+
+        const {data} = await axios.get(`/api/comments/${id}`,config)
 
         dispatch({
             type: GET_POST_COMMENTS_SUCCESS,

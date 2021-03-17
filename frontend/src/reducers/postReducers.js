@@ -24,18 +24,17 @@ export const createPostReducer = (state = {}, action) => {
     }
 }
 
-export const getPostReducer = (state = { posts: [] }, action) => {
+export const getPostReducer = (state = {  }, action) => {
     switch (action.type) {
         case GET_POST_INIT:
             return {
                 loading: true,
-                posts:[],
                 success:false
             }
         case GET_POST_SUCCESS:
             return {
                 loading: false,
-                posts: action.payload,
+                post: action.payload,
                 success:true
             }
         case GET_POST_FAIL:

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import Card from '@material-ui/core/Card';
@@ -17,7 +17,14 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Comments from '../components/Comments';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button'
+import Button from '@material-ui/core/Button';
+import {useDispatch, useSelector} from 'react-redux'
+import { getPost } from '../actions/postActions';
+import { Loader } from '../components/Loader';
+import { Fragment } from 'react';
+import { checkLike, getLikeCount, likePost, unlikePost } from '../actions/likeActions';
+import { createComment, getPostComments } from '../actions/commentActions';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -56,13 +63,54 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-export const Post = () => {
+export const Post = ({match}) => {
     const classes = useStyles();
+    const dispatch = useDispatch();
+    const history = useHistory();
+    const [comment,setComment] = useState("");
+    const [render,setRender] = useState(0);
+
+    const {id} = match.params
+    const {post} = useSelector(state=>state.postGet)
+    const {likes} = useSelector(state=>state.likesGet)
+    const {comments} = useSelector(state=>state.commentGet)
+    const {likeState} = useSelector(state=>state.likeStateGet)
+
+    function handleReRender(){
+        setRender(prevRender=>prevRender+1)
+    }
+
+    function addComment(){
+        dispatch(createComment(post.id,comment))
+        setComment("")
+        handleReRender()
+    }
+
+    function handleLike(){
+        dispatch(likePost(post.id))
+        handleReRender()
+    }
+
+    function handleUnlike(){
+        dispatch(unlikePost(post.id))
+        handleReRender()
+    }
+
+    useEffect(()=>{
+        dispatch(getPost(id))
+        dispatch(getLikeCount(id))
+        dispatch(getPostComments(id))
+        dispatch(checkLike(id))
+    },[dispatch,id,render])
 
     return (
         <div>
             <Header/>
                 <div className={classes.center}>
+                    {!post||!likes||!comments?
+                    <Loader/>
+                    :
+                    <Fragment>
                     <Card variant="outlined" className={classes.root}>
                     <CardHeader
                         avatar={
@@ -71,30 +119,37 @@ export const Post = () => {
                         </Avatar>
                         }
                         
-                        title="Shrimp and Chorizo Paella"
+                        title={post.title}
                         subheader="September 14, 2016"
                     />
                     <CardMedia
                         className={classes.media}
-                        image="/static/images/cards/paella.jpg"
+                        image={post.url}
                         title="Paella dish"
                     />
                     <CardContent>
                         <Typography variant="body2" color="textSecondary" component="p">
-                        
-                        
+                            {post.body}    
                         </Typography>
                     </CardContent>
                     <CardActions >
                         <Grid container justify="space-around" spacing="2">
                         <Grid item >
-                            <IconButton aria-label="add to favorites">
-                            <FavoriteIcon />
-                            </IconButton>
+                            {
+                                likeState===0?
+                                <IconButton aria-label="add to favorites" onClick={handleLike}>
+                                <FavoriteIcon/>{likes.count}
+                                </IconButton>
+                                :
+                                <IconButton aria-label="add to favorites">
+                                <FavoriteIcon color="secondary" onClick={handleUnlike}/>{likes.count}
+                                </IconButton>
+                            }
+                            
                         </Grid>
                         <Grid item >
                             <IconButton aria-label="share">
-                            <CommentIcon />151
+                            <CommentIcon />{comments.length}
                             </IconButton>
                         </Grid>
                         <Grid item >
@@ -106,19 +161,23 @@ export const Post = () => {
                     </CardActions>
                     </Card>
                     <p>Comments</p>
-                    <Comments/>
-                    <Comments/>
+                    {
+                        comments.map((comm)=><Comments comment={comm} handleReRender={handleReRender}/>)
+                    }
                     <form>
-                        <TextField id="standard-basic" label="New Comment" className={classes.form}/>
+                        <TextField id="standard-basic" label="New Comment" className={classes.form} value={comment} onChange={(e)=>setComment(e.target.value)}/>
                         <Button
                             fullWidth
                             variant="contained"
                             color="primary"
                             className={classes.submit}
+                            onClick={addComment}
                         >
                             Add Comment
                         </Button>
                     </form>
+                    </Fragment>
+                    }
                 </div>
             <Footer/>
         </div>

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import{
     CREATE_POST_FAIL,
-    CREATE_POST_INIT, CREATE_POST_SUCCESS, DELETE_POST_FAIL, DELETE_POST_INIT, DELETE_POST_SUCCESS, GET_ALL_POSTS_FAIL, GET_ALL_POSTS_INIT, GET_ALL_POSTS_SUCCESS, GET_USER_POSTS_FAIL, GET_USER_POSTS_INIT, GET_USER_POSTS_SUCCESS, UPDATE_POST_FAIL, UPDATE_POST_INIT, UPDATE_POST_SUCCESS
+    CREATE_POST_INIT, CREATE_POST_SUCCESS, DELETE_POST_FAIL, DELETE_POST_INIT, DELETE_POST_SUCCESS, GET_ALL_POSTS_FAIL, GET_ALL_POSTS_INIT, GET_ALL_POSTS_SUCCESS, GET_POST_FAIL, GET_POST_INIT, GET_POST_SUCCESS, GET_USER_POSTS_FAIL, GET_USER_POSTS_INIT, GET_USER_POSTS_SUCCESS, UPDATE_POST_FAIL, UPDATE_POST_INIT, UPDATE_POST_SUCCESS
 }
 from '../constants/postConstants'
 
@@ -109,19 +109,24 @@ export const deletePost = (id) => async(dispatch) => {
     }
 }
 
-export const getFollowerPosts = () => async(dispatch) => {
+export const getFollowerPosts = async(dispatch,getState) => {
     try {
         dispatch({
             type: GET_ALL_POSTS_INIT
         })
 
+        const {
+            login:{userDetails}
+        } = getState()
+
         const config = {
             headers:{
-                'Content-type':'application/json'
+                'Content-type':'application/json',
+                'x-auth': userDetails.token
             }
         }
 
-        const {data} = await axios.get(`/api/posts/follow`,config)
+        const {data} = await axios.get('/api/posts/',config)
 
         dispatch({
             type: GET_ALL_POSTS_SUCCESS,
@@ -131,6 +136,39 @@ export const getFollowerPosts = () => async(dispatch) => {
         //Accessing the error and initiating the login error action and assigning the error as a payload
         dispatch({
             type: GET_ALL_POSTS_FAIL,
+            payload: error.response && error.response.data.message
+                        ? error.response.data.message
+                        : error.message,
+        })
+    }
+}
+
+export const getPost = (id) => async(dispatch,getState) =>{
+    try {
+        dispatch({
+            type: GET_POST_INIT
+        })
+
+        const {
+            login:{userDetails}
+        } = getState()
+
+        const config = {
+            headers:{
+                'Content-type':'application/json',
+                'x-auth': userDetails.token
+            }
+        }
+
+        const {data} = await axios.get(`/api/posts/${id}`,config)
+
+        dispatch({
+            type: GET_POST_SUCCESS,
+            payload: data
+        })
+    } catch (error) {
+        dispatch({
+            type: GET_POST_FAIL,
             payload: error.response && error.response.data.message
                         ? error.response.data.message
                         : error.message,

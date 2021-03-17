@@ -78,11 +78,28 @@ export const getUserPosts = asyncHandler(async (req, res) => {
 export const getFollowerPosts = asyncHandler(async (req, res) => {
     const { id } = req.user
 
-    const { rows } = await query('SELECT * FROM postsdb INNER JOIN followersdb ON postsdb.user_id = followersdb.user_id_secondary WHERE followersdb.user_id_primary = $1', [id])
+    const { rows } = await query('SELECT postsdb.id,title,body,url,user_id FROM postsdb INNER JOIN followersdb ON postsdb.user_id = followersdb.user_id_secondary WHERE followersdb.user_id_primary = $1', [id])
 
     try {
         res.status(200)
             .json(rows)
+    } catch (error) {
+        res.status(400)
+        throw new Error(error)
+    }
+})
+
+//@route GET /api/posts/:id
+//@desc Get post
+//@access Private
+export const getPost = asyncHandler(async (req, res) => {
+    const id = req.params.id
+
+    const { rows } = await query('SELECT * FROM postsdb WHERE id = $1', [id])
+
+    try {
+        res.status(200)
+            .json(rows[0])
     } catch (error) {
         res.status(400)
         throw new Error(error)

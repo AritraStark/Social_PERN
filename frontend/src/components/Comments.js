@@ -9,6 +9,9 @@ import Typography from '@material-ui/core/Typography';
 import { blue} from '@material-ui/core/colors';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { useDispatch } from 'react-redux';
+import { deleteComment } from '../actions/commentActions';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,34 +40,39 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function Comments() {
+export default function Comments({comment,handleReRender}) {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const history = useHistory();
 
+  function handleCommentDelete(){
+    dispatch(deleteComment(comment.id))
+    handleReRender()
+  }
 
   return (
     <Card className={classes.root} variant="outlined">
       <CardHeader
         avatar={
           <Avatar aria-label="recipe" className={classes.avatar}>
-            R
+            {comment.user_name[0]}
           </Avatar>
         }
         action={
           <div>
-          <IconButton aria-label="settings">
+          <IconButton aria-label="settings" >
             <EditIcon />
           </IconButton>
-           <IconButton aria-label="settings">
+           <IconButton aria-label="settings" onClick={handleCommentDelete}>
            <DeleteIcon />
          </IconButton>
          </div>
         }
-        title="Shrimp and Chorizo Paella"
+        title={comment.user_name}
       />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
-          This impressive paella is a perfect party dish and a fun meal to cook together with your
-          guests. Add 1 cup of frozen peas along with the mussels, if you like.
+          {comment.body}
         </Typography>
       </CardContent>
 

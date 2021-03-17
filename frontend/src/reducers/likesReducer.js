@@ -24,7 +24,7 @@ export const likeReducer = (state = {}, action) => {
     }
 }
 
-export const getLikesCountReducer = (state = { }, action) => {
+export const getLikesCountReducer = (state = { likes:{} }, action) => {
     switch (action.type) {
         case GET_LIKES_COUNT_INIT:
             return {

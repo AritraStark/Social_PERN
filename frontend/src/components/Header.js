@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -10,6 +10,7 @@ import { useHistory } from 'react-router';
 import Avatar from '@material-ui/core/Avatar';
 import {Link} from 'react-router-dom'
 import {useDispatch,useSelector} from 'react-redux'
+import { logout } from '../actions/userActions';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,6 +35,11 @@ export const Header = () => {
 
   const {userDetails} = useSelector(state=>state.login)
   
+  useEffect(()=>{
+    if(!userDetails.token)
+    history.push('/')
+  },[userDetails,history])
+
   return (
     <div className={classes.root}>
       <AppBar position="static" color="transparent">
@@ -58,6 +64,10 @@ export const Header = () => {
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 color="inherit"
+                onClick={()=>{
+                  dispatch(logout)
+                  history.push('/')
+                }}
               >
                 <ExitToAppIcon/>
               </IconButton>

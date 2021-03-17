@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 550,
     minWidth: 350,
     minHeight:380,
+    margin: '1rem 0'
   },
   media: {
     height: 0,
@@ -40,12 +41,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const PostBig = () => {
+export const PostBig = ({post}) => {
   const classes = useStyles();
   const history = useHistory();
 
-  function handlePostRoute(id){
-    history.push(`/post/${id}`)
+  function handlePostRoute(){
+    history.push(`/post/${post.id}`)
   }
 
   return (
@@ -57,18 +58,17 @@ export const PostBig = () => {
           </Avatar>
         }
         
-        title="Shrimp and Chorizo Paella"
+        title={post.title}
         subheader="September 14, 2016"
       />
       <CardMedia
         className={classes.media}
-        image="/static/images/cards/paella.jpg"
+        image={post.url}
         title="Paella dish"
       />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
-          
-          
+          {post.body}
         </Typography>
       </CardContent>
       <CardActions >

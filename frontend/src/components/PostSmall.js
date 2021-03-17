@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles({
   root: {
@@ -35,10 +36,11 @@ const useStyles = makeStyles({
 
 export default function PostSmall({post}) {
   const classes = useStyles();
+  const history = useHistory();
 
   return (
     <Card className={classes.root}>
-      <CardActionArea>
+      <CardActionArea onClick={()=>history.push(`/post/${post.id}`)}>
         <CardMedia
           className={classes.media}
           image={post.url}
