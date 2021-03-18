@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { Fragment, useState } from 'react'
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -225,9 +225,10 @@ export const SignUpComponent = () => {
                         
                         <Grid container justify="flex-end">
                             <Grid item>
+                                <br/>
                                 <Link to="/login" className="link">
                                     Already have an account? Sign in
-                        </Link>
+                                </Link>
                             </Grid>
                         </Grid>
                         <Snackbar open={open} autoHideDuration={8000} onClose={handleAlertClose}>

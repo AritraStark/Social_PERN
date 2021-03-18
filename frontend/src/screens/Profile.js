@@ -24,11 +24,21 @@ import Fab from '@material-ui/core/Fab';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
-import './Font.css'
+import './Font.css';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Slide from '@material-ui/core/Slide';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
-  
+
     return (
       <div
         role="tabpanel"
@@ -100,6 +110,16 @@ export const Profile = ({match}) => {
 
     const [value, setValue] = useState(0);
     const [render, setRender] = useState(0);
+    const [delOpen, setDelOpen] = React.useState(false);
+
+    const handleDelOpen = () => {
+      setDelOpen(true);
+    };
+  
+    const handleDelClose = () => {
+      setDelOpen(false);
+    };
+    
     const id = match.params.id
 
     const userLogin = useSelector(state=>state.login)
@@ -149,7 +169,7 @@ export const Profile = ({match}) => {
                     <div className={classes.head}>
                         <Avatar className={classes.large} src={userDetails.url}/>
                         <div >
-                        <h2 className="niceFont">{userDetails.name}</h2>
+                        <h1 className="niceFont">{userDetails.name}</h1>
                         <p className="niceFont">{userDetails.description}</p>
                         </div>
                     </div>
@@ -170,7 +190,7 @@ export const Profile = ({match}) => {
                         color="secondary"
                         className={classes.button}
                         startIcon={<DeleteIcon />}
-                        disabled
+                        onClick={handleDelOpen}
                       >
                         Delete Profile
                       </Button>
@@ -219,9 +239,32 @@ export const Profile = ({match}) => {
                         </TabPanel>
                     </SwipeableViews>
                     <div>
-                        
+                    <Dialog
+                      open={delOpen}
+                      TransitionComponent={Transition}
+                      keepMounted
+                      onClose={handleDelClose}
+                      aria-labelledby="alert-dialog-slide-title"
+                      aria-describedby="alert-dialog-slide-description"
+                    >
+                      <DialogTitle id="alert-dialog-slide-title">{"Use Google's location service?"}</DialogTitle>
+                      <DialogContent>
+                        <DialogContentText id="alert-dialog-slide-description">
+                          Are you sure you want to delete your account?
+                        </DialogContentText>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={handleDelClose} color="primary">
+                          Disagree
+                        </Button>
+                        <Button onClick={handleDelClose} color="primary">
+                          Agree
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
                     </div>
                 </Container>
+                  
                 }
             <Footer/>
         </div>

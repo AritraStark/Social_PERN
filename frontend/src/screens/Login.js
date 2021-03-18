@@ -48,11 +48,12 @@ export const LoginComponent = () => {
     const [password, setPassword] = useState()
     const [open, setOpen] = useState(false);
 
-    const {success,userDetails,token} = useSelector(state=>state.login)
-    
+    const {success,userDetails} = useSelector(state=>state.login)
+
     function handleLoginClick(e) {
         e.preventDefault()
         dispatch(login(email,password))
+        setTimeout(()=>setOpen(true),1500)
     }
 
     const handleAlertClose = (event, reason) => {

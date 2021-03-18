@@ -44,7 +44,6 @@ const useStyles = makeStyles((theme) => ({
 export default function Comments({comment,handleReRender}) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const history = useHistory();
 
   const {userDetails} = useSelector(state=>state.login)
 

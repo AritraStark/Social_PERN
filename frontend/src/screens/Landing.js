@@ -2,7 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import CardMedia from '@material-ui/core/CardMedia';
 import Container from '@material-ui/core/Container';
 import { useHistory } from 'react-router';
 
@@ -33,7 +32,7 @@ export default function Landing() {
     <div className={classes.root}>
         <Container maxWidth="sm">
           <div className={classes.logo}>
-            <img src="/logo192.png" className={classes.image}/>
+            <img alt="Logo" src="/logo192.png" className={classes.image}/>
             <Typography variant="h2" component="h3">
                 Social Networking App
             </Typography>
