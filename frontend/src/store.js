@@ -35,12 +35,16 @@ import {
 import {
     loginReducer,
     signupReducer,
-    getUserDetailsReducer
+    getUserDetailsReducer,
+    deleteUserReducer,
+    updateUserReducer
 } from './reducers/userReducers'
 
 const reducers = combineReducers({
     login: loginReducer,
     signup: signupReducer,
+    userDelete: deleteUserReducer,
+    userUpdate: updateUserReducer,
     userDetailsGet: getUserDetailsReducer,
     postCreate: createPostReducer,
     postGet: getPostReducer,

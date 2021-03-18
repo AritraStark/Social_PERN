@@ -83,7 +83,11 @@ export const updateUser = asyncHandler(async (req, res) => {
 export const deleteUser = asyncHandler(async (req, res) => {
     const id = req.params.id
     try {
-        const data = await query('DELETE FROM usersdb WHERE id = $1', [id])
+        const data4 = await query('DELETE FROM likesdb WHERE user_id = $1', [id])
+        const data3 = await query('DELETE FROM commentsdb WHERE user_id = $1', [id])
+        const data2 = await query('DELETE FROM postsdb WHERE user_id = $1', [id])
+        const data1 = await query('DELETE FROM usersdb WHERE id = $1', [id])
+
         res.status(200)
             .json({
                 success: true

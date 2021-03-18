@@ -15,7 +15,7 @@ export const createPost = asyncHandler(async (req, res) => {
     try {
         //Inserting into database and fetching response
 
-        const { rows } = await query('INSERT INTO postsdb (user_id, title, body, url, file_name, user_name, user_url) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *', [id, title, body, url, file_name, user_name, user_url])
+        const { rows } = await query('INSERT INTO postsdb (user_id, title, body, url, file_name, user_name, user_url) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *', [id, title, body, url, file_name, name, user_url])
 
         //Sending json response
         res.status(201).json(rows[0])
@@ -50,7 +50,10 @@ export const updatePost = asyncHandler(async (req, res) => {
 export const deletePost = asyncHandler(async (req, res) => {
     const id = req.params.id
     try {
-        const data = await query('DELETE FROM postsdb WHERE id = $1', [id])
+        const data3 = await query('DELETE FROM likesdb WHERE post_id = $1', [id])
+        const data2 = await query('DELETE FROM commentsdb WHERE post_id = $1', [id])
+        const data1 = await query('DELETE FROM postsdb WHERE id = $1', [id])
+
         res.status(200)
             .json({
                 success: true
