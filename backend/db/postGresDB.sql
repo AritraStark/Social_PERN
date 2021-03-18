@@ -1,4 +1,4 @@
-CREATE DATABASE socialdb;
+-- CREATE DATABASE socialdb;
 CREATE TABLE usersdb (
     id BIGSERIAL UNIQUE,
     name VARCHAR(50) NOT NULL,
