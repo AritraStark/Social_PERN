@@ -15,7 +15,7 @@ import {useDispatch,useSelector} from 'react-redux'
 import { getUserPosts } from '../actions/postActions';
 import {Loader} from '../components/Loader';
 import PostSmall from '../components/PostSmall'
-import { getUserDetails } from '../actions/userActions';
+import { deleteUser, getUserDetails, logout } from '../actions/userActions';
 import { getFollowers, getFollowing } from '../actions/followerActions';
 import { ProfileSmall } from '../components/ProfileSmall';
 import Button from '@material-ui/core/Button';
@@ -31,6 +31,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
+import {projectStorage} from '../firebase/config'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -111,14 +112,6 @@ export const Profile = ({match}) => {
     const [value, setValue] = useState(0);
     const [render, setRender] = useState(0);
     const [delOpen, setDelOpen] = React.useState(false);
-
-    const handleDelOpen = () => {
-      setDelOpen(true);
-    };
-  
-    const handleDelClose = () => {
-      setDelOpen(false);
-    };
     
     const id = match.params.id
 
@@ -140,12 +133,16 @@ export const Profile = ({match}) => {
     const {following} = followingGet
     const followingLoading = followingGet.loading
 
+    const {success} = useSelector(state=>state.userDelete)
+
     useEffect(() => {
       dispatch(getUserDetails(id))
       dispatch(getUserPosts(id))
       dispatch(getFollowers(id))
       dispatch(getFollowing(id))
-    }, [id,dispatch,render])
+      if(success)
+      history.push('/')
+    }, [id,dispatch,render,success,history])
 
     function incrementRender(){
       setRender(prevState=>prevState+1)
@@ -157,6 +154,22 @@ export const Profile = ({match}) => {
 
     const handleChangeIndex = (index) => {
         setValue(index);
+    };
+
+    const handleDelOpen = () => {
+      setDelOpen(true);
+    };
+  
+    const handleDelClose = () => {
+      const storageRef = projectStorage.ref().child(userDetails.file_name); 
+      // Delete the file
+      storageRef.delete().then(() => {
+        dispatch(deleteUser)
+        setTimeout(()=>dispatch(logout),1500)
+        setDelOpen(false)
+      }).catch((error) => {
+        console.log(error);
+      });
     };
     return (
         <div>
@@ -180,7 +193,7 @@ export const Profile = ({match}) => {
                         color="secondary"
                         className={classes.button}
                         startIcon={<EditIcon />}
-                        disabled
+                        onClick={()=>history.push(`/editprofile/${userLogin.userDetails.user.id}`)}
                       >
                         Edit Profile
                       </Button>
@@ -247,7 +260,7 @@ export const Profile = ({match}) => {
                       aria-labelledby="alert-dialog-slide-title"
                       aria-describedby="alert-dialog-slide-description"
                     >
-                      <DialogTitle id="alert-dialog-slide-title">{"Use Google's location service?"}</DialogTitle>
+                      <DialogTitle id="alert-dialog-slide-title">{"DELETE ACCOUNT"}</DialogTitle>
                       <DialogContent>
                         <DialogContentText id="alert-dialog-slide-description">
                           Are you sure you want to delete your account?

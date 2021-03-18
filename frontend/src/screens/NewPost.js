@@ -61,6 +61,7 @@ export const NewPost = () => {
     const [error, setError] = useState(null);
     const [progress, setProgress] = useState(0);
     const [stateurl, setStateurl] = useState(null);
+    const [fileName,setFileName] = useState(null);
 
     const types = ['image/png', 'image/jpeg'];
 
@@ -83,7 +84,7 @@ export const NewPost = () => {
     }, [success,history])
 
     function handleNewPostClick() {
-        const fileName = file.name+userDetails.user.id
+        setFileName(file.name+userDetails.user.id)
         const storageRef = projectStorage.ref(fileName);    
         storageRef.put(file).on('state_changed', (snap) => {
             let percentage = (snap.bytesTransferred / snap.totalBytes) * 100;

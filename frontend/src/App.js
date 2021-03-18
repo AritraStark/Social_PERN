@@ -9,6 +9,7 @@ import { Post } from './screens/Post';
 import { NewPost } from './screens/NewPost';
 import { EditPost } from './screens/EditPost';
 import { Explore } from './screens/Explore';
+import { EditProfile } from './screens/EditProfile';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/newpost" exact component={NewPost}/>
           <Route path="/editpost/:id" exact component={EditPost}/>
           <Route path="/explore" exact component={Explore}/>
+          <Route path="/editprofile/:id" exact component={EditProfile}/>
           {/* <Route path="/followers" exact component={}/>*/}
         </Switch>
       </Router>
