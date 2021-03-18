@@ -17,7 +17,7 @@ import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 550,
+    maxWidth: 750,
     minWidth: 350,
     minHeight:380,
     margin: '1rem 0'
@@ -53,13 +53,13 @@ export const PostBig = ({post}) => {
     <Card variant="outlined" className={classes.root}>
       <CardHeader
         avatar={
-          <Avatar aria-label="recipe" className={classes.avatar}>
-            R
+          <Avatar aria-label="recipe" className={classes.avatar} src={post.user_url}>
+            {post.user_name}
           </Avatar>
         }
         
         title={post.title}
-        subheader="September 14, 2016"
+        subheader={post.user_name}
       />
       <CardMedia
         className={classes.media}

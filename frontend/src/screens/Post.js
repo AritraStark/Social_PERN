@@ -25,6 +25,7 @@ import { Fragment } from 'react';
 import { checkLike, getLikeCount, likePost, unlikePost } from '../actions/likeActions';
 import { createComment, getPostComments } from '../actions/commentActions';
 import { useHistory } from 'react-router';
+import './Font.css'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -115,12 +116,12 @@ export const Post = ({match}) => {
                     <CardHeader
                         avatar={
                         <Avatar aria-label="recipe" className={classes.avatar}>
-                            R
+                            {post.user_url}
                         </Avatar>
                         }
                         
                         title={post.title}
-                        subheader="September 14, 2016"
+                        subheader={post.user_name}
                     />
                     <CardMedia
                         className={classes.media}
@@ -128,7 +129,7 @@ export const Post = ({match}) => {
                         title="Paella dish"
                     />
                     <CardContent>
-                        <Typography variant="body2" color="textSecondary" component="p">
+                        <Typography variant="body2" color="textSecondary" className="niceFont2">
                             {post.body}    
                         </Typography>
                     </CardContent>
@@ -160,7 +161,7 @@ export const Post = ({match}) => {
                         </Grid>
                     </CardActions>
                     </Card>
-                    <p>Comments</p>
+                    <h3 className="niceFont2">Comments</h3>
                     {
                         comments.map((comm)=><Comments comment={comm} handleReRender={handleReRender}/>)
                     }

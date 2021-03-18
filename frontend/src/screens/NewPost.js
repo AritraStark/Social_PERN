@@ -172,7 +172,7 @@ export const NewPost = () => {
                             </Grid>
 
                         </Grid>
-                        {file&&
+                        {file&&title&&body&&
                         <Button
                             fullWidth
                             variant="contained"

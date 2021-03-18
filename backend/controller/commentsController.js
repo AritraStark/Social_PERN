@@ -6,10 +6,10 @@ import asyncHandler from 'express-async-handler'
 //@access Private
 export const insertComment = asyncHandler(async (req, res) => {
     const { post_id, body } = req.body
-    const { id, name } = req.user
+    const { id, name, url } = req.user
 
     try {
-        const { rows } = await query('INSERT INTO commentsdb (post_id, user_id, user_name, body) VALUES ($1, $2, $3, $4) RETURNING *', [post_id, id, name, body])
+        const { rows } = await query('INSERT INTO commentsdb (post_id, user_id, user_name, body, url) VALUES ($1, $2, $3, $4, $5) RETURNING *', [post_id, id, name, body, url])
         res.status(201)
             .json(rows[0])
     } catch (error) {

@@ -11,6 +11,7 @@ import Avatar from '@material-ui/core/Avatar';
 import {Link} from 'react-router-dom'
 import {useDispatch,useSelector} from 'react-redux'
 import { logout } from '../actions/userActions';
+import './Header.css'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,8 +46,8 @@ export const Header = () => {
       <AppBar position="static" color="transparent">
         <Toolbar>
           <Avatar alt="Logo" src="/logo192.png" />
-          <Typography variant="h6" className={classes.title}>
-            <Link to="/home">Social Network</Link>
+          <Typography variant="h5" className={classes.title}>
+            <Link to="/home" className="headLink">Stark Book</Link>
           </Typography>
 
             <div>

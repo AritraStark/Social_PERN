@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Footer } from '../components/Footer';
-import { createPost } from '../actions/postActions';
+import { updatePost } from '../actions/postActions';
 import { useDispatch, useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
@@ -39,16 +39,18 @@ export const EditPost = () => {
     const dispatch = useDispatch()
     const history = useHistory()
 
+    const {success} = useSelector(state=>state.postUpdate)
 
     const [title, setTitle] = useState()
     const [body, setBody] = useState()
 
-
     useEffect(() => {
+        if(success)
+        history.push('/home')
+    }, [success,history])
 
-    }, [])
-
-    function handleNewPostClick() {
+    function handleEditPostClick() {
+        dispatch(updatePost(title,body))
     }
 
     return (
@@ -95,15 +97,16 @@ export const EditPost = () => {
                             </Grid>
 
                         </Grid>
+                        {title&&body&&
                         <Button
                             fullWidth
                             variant="contained"
                             color="primary"
                             className={classes.submit}
-                            onClick={handleNewPostClick}
+                            onClick={handleEditPostClick}
                         >
-                            Add Post
-                    </Button>
+                            Update Post
+                        </Button>}
                     </form>
                 </div>
                 <Box mt={5}>

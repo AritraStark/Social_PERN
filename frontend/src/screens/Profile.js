@@ -21,7 +21,10 @@ import { ProfileSmall } from '../components/ProfileSmall';
 import Button from '@material-ui/core/Button';
 import { useHistory } from 'react-router';
 import Fab from '@material-ui/core/Fab';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
+import './Font.css'
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -63,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems:'center',
-        padding: '4rem 0'
+        padding: '4rem 0 1rem 0'
     },
     tabs:{
         display: 'grid',
@@ -82,6 +85,9 @@ const useStyles = makeStyles((theme) => ({
     },
     fbut:{
       margin:'2rem 0'
+    },
+    button:{
+      margin:'1rem 3rem 2rem 3rem '
     }
 }));
   
@@ -95,6 +101,8 @@ export const Profile = ({match}) => {
     const [value, setValue] = useState(0);
     const [render, setRender] = useState(0);
     const id = match.params.id
+
+    const userLogin = useSelector(state=>state.login)
 
     const userPostget = useSelector(state=>state.userPostGet)
     const {posts} = userPostget
@@ -141,10 +149,34 @@ export const Profile = ({match}) => {
                     <div className={classes.head}>
                         <Avatar className={classes.large} src={userDetails.url}/>
                         <div >
-                        <h3>{userDetails.name}</h3>
-                        <p>{userDetails.description}</p>
+                        <h2 className="niceFont">{userDetails.name}</h2>
+                        <p className="niceFont">{userDetails.description}</p>
                         </div>
                     </div>
+                    { userLogin.userDetails.user.id == match.params.id ?
+                    <div>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        className={classes.button}
+                        startIcon={<EditIcon />}
+                        disabled
+                      >
+                        Edit Profile
+                      </Button>
+
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        className={classes.button}
+                        startIcon={<DeleteIcon />}
+                        disabled
+                      >
+                        Delete Profile
+                      </Button>
+                    </div>
+                    :<div></div>
+                    }
                     <AppBar position="static" color="default">
                         <Tabs
                         value={value}

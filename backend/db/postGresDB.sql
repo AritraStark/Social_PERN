@@ -17,6 +17,7 @@ CREATE TABLE postsdb (
     url VARCHAR(255),
     file_name VARCHAR(255),
     user_name VARCHAR(255) NOT NULL,
+    user_url VARCHAR(255),
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES usersdb(id)
 );
@@ -25,6 +26,7 @@ CREATE TABLE commentsdb(
     post_id INT NOT NULL,
     user_id INT NOT NULL,
     user_name VARCHAR NOT NULL,
+    url VARCHAR(255),
     body VARCHAR(255) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES usersdb(id),

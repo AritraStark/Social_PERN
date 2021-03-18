@@ -27,7 +27,7 @@ export const getFollowers = asyncHandler(async (req, res) => {
 
     const { rowCount } = await query('SELECT * FROM usersdb WHERE id = $1 ', [id])
     if (rowCount == '1') {
-        const { rows } = await query('SELECT usersdb.id,name,email,description FROM usersdb INNER JOIN followersdb ON usersdb.id = followersdb.user_id_secondary WHERE user_id_primary = $1', [id])
+        const { rows } = await query('SELECT usersdb.id,name,email,description,usersdb.url FROM usersdb INNER JOIN followersdb ON usersdb.id = followersdb.user_id_secondary WHERE user_id_primary = $1', [id])
         res.status(200)
             .json(rows)
     } else {
@@ -44,7 +44,7 @@ export const getFollowing = asyncHandler(async (req, res) => {
 
     const { rowCount } = await query('SELECT * FROM usersdb WHERE id = $1 ', [id])
     if (rowCount == '1') {
-        const { rows } = await query('SELECT usersdb.id,name,email,description FROM usersdb INNER JOIN followersdb ON usersdb.id = followersdb.user_id_primary WHERE user_id_secondary = $1', [id])
+        const { rows } = await query('SELECT usersdb.id,name,email,description,usersdb.url FROM usersdb INNER JOIN followersdb ON usersdb.id = followersdb.user_id_primary WHERE user_id_secondary = $1', [id])
         res.status(200)
             .json(rows)
     } else {

@@ -9,9 +9,10 @@ import Typography from '@material-ui/core/Typography';
 import { blue} from '@material-ui/core/colors';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { deleteComment } from '../actions/commentActions';
 import { useHistory } from 'react-router';
+import './Font.css'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,6 +46,8 @@ export default function Comments({comment,handleReRender}) {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const {userDetails} = useSelector(state=>state.login)
+
   function handleCommentDelete(){
     dispatch(deleteComment(comment.id))
     handleReRender()
@@ -54,11 +57,12 @@ export default function Comments({comment,handleReRender}) {
     <Card className={classes.root} variant="outlined">
       <CardHeader
         avatar={
-          <Avatar aria-label="recipe" className={classes.avatar}>
+          <Avatar aria-label="recipe" className={classes.avatar} src={comment.url}>
             {comment.user_name[0]}
           </Avatar>
         }
         action={
+          comment.user_id==userDetails.user.id?
           <div>
           <IconButton aria-label="settings" >
             <EditIcon />
@@ -67,11 +71,12 @@ export default function Comments({comment,handleReRender}) {
            <DeleteIcon />
          </IconButton>
          </div>
+         :<div></div>
         }
         title={comment.user_name}
       />
       <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">
+        <Typography variant="body2" color="textSecondary" component="p" className="niceFont">
           {comment.body}
         </Typography>
       </CardContent>

@@ -7,6 +7,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import { Button } from '@material-ui/core';
 import { useHistory } from 'react-router';
+import './Font.css'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,10 +39,10 @@ export default function People({user,handleFollow}) {
     <Card className={classes.root}>
       <CardContent className={classes.center}>
         <Avatar className={classes.large} src={user.url}/>
-        <Typography variant="h5">{user.name}</Typography>
+        <Typography variant="h5" className="niceFont">{user.name}</Typography>
       </CardContent>
       <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">
+        <Typography variant="body2" color="textSecondary" component="p" className="niceFont">
           {user.description}
         </Typography>
       </CardContent>

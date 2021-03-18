@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import { useHistory } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { unfollowUser } from '../actions/followerActions';
+import './Font.css'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,10 +43,10 @@ export const ProfileSmall = ({profile,unfollow,incrementRender}) => {
       <Card className={classes.root}>
         <CardContent className={classes.center}>
           <Avatar className={classes.large} src={profile.url}/>
-          <Typography variant="h5">{profile.name}</Typography>
+          <Typography variant="h5" className="niceFont">{profile.name}</Typography>
         </CardContent>
         <CardContent>
-          <Typography variant="body2" color="textSecondary" component="p">
+          <Typography variant="body2" color="textSecondary" component="p" className="niceFont">
             {profile.description}
           </Typography>
         </CardContent>

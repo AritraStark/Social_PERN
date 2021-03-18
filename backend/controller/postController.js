@@ -8,13 +8,14 @@ export const createPost = asyncHandler(async (req, res) => {
     //Extracting values from body of request
     const { title, body, url, file_name } = req.body
     //Getting id of user from auth middleware
-    const { id } = req.user
+    const { id, name } = req.user
+    const user_url = req.user.url
     // const user = await query('SELECT name FROM usersdb WHERE id = $1', [id])
     // const user_name = user.rows.name
     try {
         //Inserting into database and fetching response
 
-        const { rows } = await query('INSERT INTO postsdb (user_id, title, body, url, file_name) VALUES ($1, $2, $3, $4, $5) RETURNING *', [id, title, body, url, file_name])
+        const { rows } = await query('INSERT INTO postsdb (user_id, title, body, url, file_name, user_name, user_url) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *', [id, title, body, url, file_name, user_name, user_url])
 
         //Sending json response
         res.status(201).json(rows[0])
@@ -78,10 +79,10 @@ export const getUserPosts = asyncHandler(async (req, res) => {
 //@route GET /api/posts/follow
 //@desc Get follower posts
 //@access Private
-export const getFollowerPosts = asyncHandler(async (req, res) => {
+export const getFollowingPosts = asyncHandler(async (req, res) => {
     const { id } = req.user
 
-    const { rows } = await query('SELECT postsdb.id, title, body, url, user_id, user_name FROM postsdb INNER JOIN followersdb ON postsdb.user_id = followersdb.user_id_secondary WHERE followersdb.user_id_primary = $1', [id])
+    const { rows } = await query('SELECT postsdb.id, title, body, url, user_id, user_name, user_url FROM postsdb INNER JOIN followersdb ON postsdb.user_id = followersdb.user_id_primary WHERE followersdb.user_id_secondary = $1', [id])
 
     try {
         res.status(200)

@@ -212,7 +212,7 @@ export const SignUpComponent = () => {
                             </Grid>
 
                         </Grid>
-                        {file&&
+                        {file&&name&&email&&description&&password&&
                         <Button
                         fullWidth
                         variant="contained"
