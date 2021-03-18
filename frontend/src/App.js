@@ -8,6 +8,7 @@ import {SignUpComponent} from './screens/SignUp';
 import { Post } from './screens/Post';
 import { NewPost } from './screens/NewPost';
 import { EditPost } from './screens/EditPost';
+import { Explore } from './screens/Explore';
 
 function App() {
   return (
@@ -22,11 +23,8 @@ function App() {
           <Route path="/post/:id" exact component={Post}/>
           <Route path="/newpost" exact component={NewPost}/>
           <Route path="/editpost/:id" exact component={EditPost}/>
-          {/* <Route path="/followers" exact component={}/>
-          
-          
-          
-           */}
+          <Route path="/explore" exact component={Explore}/>
+          {/* <Route path="/followers" exact component={}/>*/}
         </Switch>
       </Router>
     </div>

@@ -8,7 +8,7 @@ import genToken from '../utils/genToken.js'
 //@access Public
 export const createUser = asyncHandler(async (req, res) => {
     //Extracting values from body of request
-    const { name, email, description, password } = req.body
+    const { name, email, description, password, url, file_name } = req.body
     //Hadshing password
     const hPass = await hash(password)
 
@@ -17,7 +17,7 @@ export const createUser = asyncHandler(async (req, res) => {
     if (rowCount == '0') {
         try {
             //Inserting into database and fetching response
-            const { rows } = await query('INSERT INTO usersdb (name, email, description, password) VALUES ($1, $2, $3, $4) RETURNING *', [name, email, description, hPass])
+            const { rows } = await query('INSERT INTO usersdb (name, email, description, password, url, file_name) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [name, email, description, hPass, url, file_name])
             const token = await genToken(rows[0].id)
             const user = rows[0]
             //Sending json response

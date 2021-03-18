@@ -12,6 +12,7 @@ import {
     followReducer,
     getFollowersReducer,
     getFollowingReducer,
+    getUnfollowedUsersReducer,
     unfollowReducer
 } from './reducers/followerReducer'
 
@@ -55,6 +56,7 @@ const reducers = combineReducers({
     followersGet: getFollowersReducer,
     followingGet: getFollowingReducer,
     unfollow: unfollowReducer,
+    unfollowedUsersGet: getUnfollowedUsersReducer,
     like: likeReducer,
     likesGet: getLikesCountReducer,
     unlike: unlikeReducer,

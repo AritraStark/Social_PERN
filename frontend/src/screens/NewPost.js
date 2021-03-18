@@ -15,6 +15,9 @@ import { createPost } from '../actions/postActions';
 import { useDispatch, useSelector } from 'react-redux';
 import Fab from "@material-ui/core/Fab";
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
+import ProgressBar from '../components/ProgessBar';
+import { projectStorage } from '../firebase/config';
+
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -50,16 +53,55 @@ export const NewPost = () => {
     const dispatch = useDispatch()
     const history = useHistory()
 
+    const {userDetails} = useSelector(state=>state.login)
 
     const [title, setTitle] = useState()
     const [body, setBody] = useState()
+    const [file, setFile] = useState(null);
+    const [error, setError] = useState(null);
+    const [progress, setProgress] = useState(0);
+    const [stateurl, setStateurl] = useState(null);
 
+    const types = ['image/png', 'image/jpeg'];
+
+    const handleFileChange = (e) => {
+        let selected = e.target.files[0];
+        if (selected && types.includes(selected.type)) {
+        setFile(selected);
+        setError('');
+        } else {
+        setFile(null);
+        setError('Please select an image file (png or jpg)');
+        }
+    };
+
+    const {success} = useSelector(state=>state.postCreate)
 
     useEffect(() => {
-
-    }, [])
+        if(success)
+        history.push('/home')
+    }, [success,history])
 
     function handleNewPostClick() {
+        const fileName = file.name+userDetails.user.id
+        const storageRef = projectStorage.ref(fileName);    
+        storageRef.put(file).on('state_changed', (snap) => {
+            let percentage = (snap.bytesTransferred / snap.totalBytes) * 100;
+            setProgress(percentage);
+        }, (err) => {
+            setError(err);
+        }, async () => {
+            try {
+                const url = await storageRef.getDownloadURL();
+                setStateurl(url);
+                dispatch(createPost(title,body,url,fileName))
+                setTitle(null)
+                setBody(null)
+                setFile(null)
+            } catch (error) {
+                setError(error)
+            }
+        });   
     }
 
     return (
@@ -111,7 +153,7 @@ export const NewPost = () => {
                                 id="contained-button-file"
                                 multiple
                                 type="file"
-                                
+                                onChange={handleFileChange}
                                 />
                                 <label htmlFor="contained-button-file">
                                 <div className={classes.imgin}> 
@@ -120,14 +162,17 @@ export const NewPost = () => {
                                     </Typography>
                                     <Fab component="span" className={classes.button}>
                                         <AddPhotoAlternateIcon />
-                                        
                                     </Fab>
                                     
                                 </div>
                                 </label>
+                                { error && <div className="error">{ error }</div>}
+                                { file && <div>{ file.name }</div> }
+                                { file && <ProgressBar progress={progress} /> }
                             </Grid>
 
                         </Grid>
+                        {file&&
                         <Button
                             fullWidth
                             variant="contained"
@@ -136,7 +181,8 @@ export const NewPost = () => {
                             onClick={handleNewPostClick}
                         >
                             Add Post
-                    </Button>
+                    </Button>}
+                        
                     </form>
                 </div>
                 <Box mt={5}>

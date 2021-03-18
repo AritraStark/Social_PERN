@@ -10,6 +10,9 @@ import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory } from 'react-router';
+import { useDispatch } from 'react-redux';
+import {projectStorage} from '../firebase/config'
+import { deletePost } from '../actions/postActions';
 
 const useStyles = makeStyles({
   root: {
@@ -34,9 +37,21 @@ const useStyles = makeStyles({
   }
 });
 
-export default function PostSmall({post}) {
+export default function PostSmall({post,incrementRender}) {
   const classes = useStyles();
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  function handlePostDelete(){
+    const storageRef = projectStorage.ref().child(post.file_name); 
+    // Delete the file
+    storageRef.delete().then(() => {
+      dispatch(deletePost(post.id))
+      incrementRender()
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
 
   return (
     <Card className={classes.root}>
@@ -56,10 +71,10 @@ export default function PostSmall({post}) {
         </CardContent>
       </CardActionArea>
       <CardActions className={classes.buttons}>
-        <Button size="small" color="primary">
+        <Button size="small" color="primary" onClick={()=>history.push(`/editpost/${post.id}`)}>
           <EditIcon/>
         </Button>
-        <Button size="small" color="primary">
+        <Button size="small" color="primary" onClick={handlePostDelete}>
           <DeleteIcon/>
         </Button>
       </CardActions>

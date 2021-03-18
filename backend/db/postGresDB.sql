@@ -4,6 +4,8 @@ CREATE TABLE usersdb (
     name VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     description VARCHAR(255) NOT NULL,
+    url VARCHAR(255),
+    file_name VARCHAR(255),
     password VARCHAR(255) NOT NULL,
     PRIMARY KEY(id)
 );
@@ -13,6 +15,8 @@ CREATE TABLE postsdb (
     title VARCHAR(100) NOT NULL,
     body VARCHAR(255) NOT NULL,
     url VARCHAR(255),
+    file_name VARCHAR(255),
+    user_name VARCHAR(255) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES usersdb(id)
 );

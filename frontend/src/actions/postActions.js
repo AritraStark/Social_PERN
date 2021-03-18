@@ -5,13 +5,24 @@ import{
 }
 from '../constants/postConstants'
 
-export const createPost = (title,body,url) => async(dispatch) =>{
+export const createPost = (title,body,url,file_name) => async(dispatch,getState) =>{
     try{
         dispatch({
             type: CREATE_POST_INIT
         })
 
-        const {data} = await axios.post('/api/posts',{title,body,url})
+        const {
+            login:{userDetails}
+        } = getState()
+
+        const config = {
+            headers:{
+                'Content-type':'application/json',
+                'x-auth': userDetails.token
+            }
+        }
+
+        const {data} = await axios.post('/api/posts',{title,body,url,file_name},config)
 
         dispatch({
             type: CREATE_POST_SUCCESS,
@@ -86,13 +97,24 @@ export const getUserPosts = (id) => async(dispatch,getState) => {
     }
 }
 
-export const deletePost = (id) => async(dispatch) => {
+export const deletePost = (id) => async(dispatch,getState) => {
     try {
         dispatch({
             type: DELETE_POST_INIT
         })
 
-        const {data} = axios.delete(`/api/posts/${id}`)
+        const {
+            login:{userDetails}
+        } = getState()
+
+        const config = {
+            headers:{
+                'Content-type':'application/json',
+                'x-auth': userDetails.token
+            }
+        }
+
+        const {data} = axios.delete(`/api/posts/${id}`,config)
 
         dispatch({
             type: DELETE_POST_SUCCESS,

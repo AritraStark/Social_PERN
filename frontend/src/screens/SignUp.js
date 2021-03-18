@@ -17,6 +17,8 @@ import { signup } from '../actions/userActions';
 import { useDispatch, useSelector } from 'react-redux';
 import Fab from "@material-ui/core/Fab";
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
+import ProgressBar from '../components/ProgessBar';
+import { projectStorage } from '../firebase/config';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -55,23 +57,60 @@ export const SignUpComponent = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
 
+    const {success} = useSelector(state=>state.signup)
 
     const [name, setName] = useState()
     const [email, setEmail] = useState()
+    const [description, setDescription] = useState()
     const [password, setPassword] = useState()
+    const [file, setFile] = useState(null);
+    const [error, setError] = useState(null);
+    const [progress, setProgress] = useState(0);
+    const [stateurl, setStateurl] = useState(null);
     const [open, setOpen] = useState(false);
     
+    const types = ['image/png', 'image/jpeg'];
+
+    const handleFileChange = (e) => {
+        let selected = e.target.files[0];
+        if (selected && types.includes(selected.type)) {
+        setFile(selected);
+        setError('');
+        } else {
+        setFile(null);
+        setError('Please select an image file (png or jpg)');
+        }
+    };
 
     function handleSignUpClick(e) {
-        
-        setTimeout(()=>setOpen(true),1500)
+        const fileName = file.name+email
+        const storageRef = projectStorage.ref(fileName);    
+        storageRef.put(file).on('state_changed', (snap) => {
+            let percentage = (snap.bytesTransferred / snap.totalBytes) * 100;
+            setProgress(percentage);
+        }, (err) => {
+            setError(err);
+        }, async () => {
+            try {
+                const url = await storageRef.getDownloadURL();
+                setStateurl(url);
+                dispatch(signup(name,email,description,password,url,fileName))
+                setName(null)
+                setPassword(null)
+                setPassword(null)
+                setDescription(null)
+                setFile(null)
+                setTimeout(()=>setOpen(true),1500)
+            } catch (error) {
+                setError(error)
+            }
+        });  
     }
 
     const handleAlertClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
-
         setOpen(false);
     };
 
@@ -142,7 +181,7 @@ export const SignUpComponent = () => {
                                     name="Description"
                                     autoComplete="Description"
                                     onChange={(e) => {
-                                        setEmail(e.target.value)
+                                        setDescription(e.target.value)
                                     }}
                                 />
                             </Grid>
@@ -153,7 +192,7 @@ export const SignUpComponent = () => {
                                 id="contained-button-file"
                                 multiple
                                 type="file"
-                                
+                                onChange={handleFileChange}
                                 />
                                 <label htmlFor="contained-button-file">
                                 <div className={classes.imgin}> 
@@ -167,18 +206,23 @@ export const SignUpComponent = () => {
                                     
                                 </div>
                                 </label>
+                                { error && <div className="error">{ error }</div>}
+                                { file && <div>{ file.name }</div> }
+                                { file && <ProgressBar progress={progress} /> }
                             </Grid>
 
                         </Grid>
+                        {file&&
                         <Button
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            className={classes.submit}
-                            onClick={handleSignUpClick}
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        className={classes.submit}
+                        onClick={handleSignUpClick}
                         >
                             Sign Up
-                    </Button>
+                    </Button>}
+                        
                         <Grid container justify="flex-end">
                             <Grid item>
                                 <Link to="/login" className="link">
@@ -187,7 +231,7 @@ export const SignUpComponent = () => {
                             </Grid>
                         </Grid>
                         <Snackbar open={open} autoHideDuration={8000} onClose={handleAlertClose}>
-                            {false===true?<Alert onClose={handleAlertClose} severity="success">
+                            {success===true?<Alert onClose={handleAlertClose} severity="success">
                                 Signup Successful, Login <Link to='/login'>here</Link>
                             </Alert>:<Alert onClose={handleAlertClose} severity="error">
                                 Signup Unsuccessful

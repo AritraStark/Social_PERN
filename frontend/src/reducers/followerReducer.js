@@ -1,4 +1,4 @@
-import { FOLLOW_FAIL, FOLLOW_INIT, FOLLOW_SUCCESS, GET_FOLLOWER_FAIL, GET_FOLLOWER_INIT, GET_FOLLOWER_SUCCESS, GET_FOLLOWING_FAIL, GET_FOLLOWING_INIT, GET_FOLLOWING_SUCCESS, UNFOLLOW_FAIL, UNFOLLOW_INIT, UNFOLLOW_SUCCESS } from '../constants/followConstants'
+import { FOLLOW_FAIL, FOLLOW_INIT, FOLLOW_SUCCESS, GET_FOLLOWER_FAIL, GET_FOLLOWER_INIT, GET_FOLLOWER_SUCCESS, GET_FOLLOWING_FAIL, GET_FOLLOWING_INIT, GET_FOLLOWING_SUCCESS, GET_UNFOLLOWED_USER_FAIL, GET_UNFOLLOWED_USER_INIT, GET_UNFOLLOWED_USER_SUCCESS, UNFOLLOW_FAIL, UNFOLLOW_INIT, UNFOLLOW_SUCCESS } from '../constants/followConstants'
 
 export const followReducer = (state = {}, action) => {
     switch (action.type) {
@@ -24,7 +24,7 @@ export const followReducer = (state = {}, action) => {
     }
 }
 
-export const getFollowersReducer = (state = { }, action) => {
+export const getFollowersReducer = (state = { followers:[] }, action) => {
     switch (action.type) {
         case GET_FOLLOWER_INIT:
             return {
@@ -34,7 +34,8 @@ export const getFollowersReducer = (state = { }, action) => {
         case GET_FOLLOWER_SUCCESS:
             return {
                 loading: false,
-                followers: action.payload
+                followers: action.payload,
+                success: true
             }
         case GET_FOLLOWER_FAIL:
             return {
@@ -46,7 +47,7 @@ export const getFollowersReducer = (state = { }, action) => {
     }
 }
 
-export const getFollowingReducer = (state = {}, action) => {
+export const getFollowingReducer = (state = { following:[] }, action) => {
     switch (action.type) {
         case GET_FOLLOWING_INIT:
             return {
@@ -91,5 +92,29 @@ export const unfollowReducer = (state = {}, action) => {
         default:
             return state
             
+    }
+}
+
+export const getUnfollowedUsersReducer = (state = { unfollowedUsers:[] }, action) => {
+    switch (action.type) {
+        case GET_UNFOLLOWED_USER_INIT:
+            return {
+                loading: true,
+                success:false
+            }
+        case GET_UNFOLLOWED_USER_SUCCESS:
+            return {
+                loading: false,
+                unfollowedUsers: action.payload,
+                success:true
+            }
+        case GET_UNFOLLOWED_USER_FAIL:
+            return {
+                loading: false,
+                error: action.payload,
+                success:false
+            }
+        default:
+            return state           
     }
 }

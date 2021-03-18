@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react'
+import React,{useEffect, useState} from 'react'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import Container from '@material-ui/core/Container';
@@ -16,6 +16,12 @@ import { getUserPosts } from '../actions/postActions';
 import {Loader} from '../components/Loader';
 import PostSmall from '../components/PostSmall'
 import { getUserDetails } from '../actions/userActions';
+import { getFollowers, getFollowing } from '../actions/followerActions';
+import { ProfileSmall } from '../components/ProfileSmall';
+import Button from '@material-ui/core/Button';
+import { useHistory } from 'react-router';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -65,14 +71,17 @@ const useStyles = makeStyles((theme) => ({
         padding: '2rem'
     },
     large: {
-      width: theme.spacing(7),
-      height: theme.spacing(7),
+      width: theme.spacing(15),
+      height: theme.spacing(15),
     },
     center:{
       display:'flex',
       flexDirection:'column',
       justifyContent:'space-around',
       alignItems:'center'
+    },
+    fbut:{
+      margin:'2rem 0'
     }
 }));
   
@@ -81,8 +90,10 @@ export const Profile = ({match}) => {
     const classes = useStyles();
     const theme = useTheme();
     const dispatch = useDispatch();
+    const history = useHistory();
 
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = useState(0);
+    const [render, setRender] = useState(0);
     const id = match.params.id
 
     const userPostget = useSelector(state=>state.userPostGet)
@@ -93,11 +104,24 @@ export const Profile = ({match}) => {
     const {userDetails} = userDetailsget
     const userLoading = userDetailsget.loading
 
+    const followersGet = useSelector(state=>state.followersGet)
+    const {followers} = followersGet
+    const followerLoading = followersGet.loading
+
+    const followingGet = useSelector(state=>state.followingGet)
+    const {following} = followingGet
+    const followingLoading = followingGet.loading
+
     useEffect(() => {
       dispatch(getUserDetails(id))
       dispatch(getUserPosts(id))
-      
-    }, [id,dispatch])
+      dispatch(getFollowers(id))
+      dispatch(getFollowing(id))
+    }, [id,dispatch,render])
+
+    function incrementRender(){
+      setRender(prevState=>prevState+1)
+    }
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -115,7 +139,7 @@ export const Profile = ({match}) => {
               :
                 <Container maxWidth="md">
                     <div className={classes.head}>
-                        <Avatar className={classes.large} />
+                        <Avatar className={classes.large} src={userDetails.url}/>
                         <div >
                         <h3>{userDetails.name}</h3>
                         <p>{userDetails.description}</p>
@@ -143,14 +167,23 @@ export const Profile = ({match}) => {
                     >
                         <TabPanel value={value} index={0} dir={theme.direction}>
                           <div className={classes.center}>
-                            {postLoading?<Loader/>:posts.map((post)=><PostSmall post={post}/>)} 
+                            {postLoading?<Loader/>:posts.map((post)=><PostSmall post={post} incrementRender={incrementRender}/>)} 
+                            <Fab color="primary" aria-label="add" className={classes.fbut} onClick={()=>history.push('/newpost')}>
+                              <AddIcon />
+                            </Fab>
                           </div>
                         </TabPanel>
                         <TabPanel value={value} index={1} dir={theme.direction}>
-                        Item Two
+                          <div className={classes.center}>
+                            {followerLoading?<Loader/>:followers.map((follower)=><ProfileSmall profile={follower} unfollow={false} incrementRender={incrementRender}/>)} 
+                            <Button color="primary" onClick={()=>history.push('/explore')}>Explore People</Button>
+                          </div>
                         </TabPanel>
                         <TabPanel value={value} index={2} dir={theme.direction}>
-                        Item Three
+                          <div className={classes.center}>
+                            {followingLoading?<Loader/>:following.map((follow)=><ProfileSmall profile={follow} unfollow={true} incrementRender={incrementRender}/>)} 
+                            <Button color="primary" onClick={()=>history.push('/explore')}>Explore People</Button>
+                          </div>
                         </TabPanel>
                     </SwipeableViews>
                     <div>

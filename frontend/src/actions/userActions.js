@@ -84,7 +84,7 @@ export const getUserDetails = (id) => async(dispatch,getState) => {
     }
 }
 
-export const signup = (name,email,password) => async(dispatch) => {
+export const signup = (name,email,description,password,url,file_name) => async(dispatch) => {
     try {
         //The login action is initiated and the action is dispatched here
         dispatch({
@@ -101,7 +101,7 @@ export const signup = (name,email,password) => async(dispatch) => {
         //Handling the post action and getting user data
         const {data} = await axios.post(
             '/api/users/',
-            {name,email,password},
+            {name,email,description,password,url,file_name},
             config
         )
         
