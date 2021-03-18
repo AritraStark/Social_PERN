@@ -41,7 +41,6 @@ export const loginUser = asyncHandler(async (req, res) => {
         const { rows } = await query('SELECT * FROM usersdb WHERE email = $1', [email])
         const check = await checkPass(password, rows[0].password)
 
-        console.log(check)
         if (check) {
             const token = await genToken(rows[0].id)
             const user = rows[0]
